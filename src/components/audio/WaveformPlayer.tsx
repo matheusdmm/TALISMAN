@@ -40,6 +40,9 @@ export function WaveformPlayer() {
       minPxPerSec: 1,
     });
 
+    // Apply current volume immediately to the new instance
+    ws.setVolume(volume);
+
     ws.load(currentTrack.audioUrl).catch((err) => {
       if (err.name === "AbortError") return;
       console.error("Error loading audio:", err);
@@ -59,6 +62,10 @@ export function WaveformPlayer() {
     });
 
     ws.on("error", (err) => {
+      // Ignore AbortError as it's usually intentional (e.g. track change)
+      if (err instanceof Error && err.name === "AbortError") return;
+      if (typeof err === 'string' && err.includes('AbortError')) return;
+      
       console.error("WaveSurfer error:", err);
       setError("An error occurred with the audio player.");
       setIsLoading(false);
@@ -83,8 +90,15 @@ export function WaveformPlayer() {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (wavesurferRef.current) {
-        wavesurferRef.current.destroy();
+      if (ws) {
+        ws.pause();
+        ws.destroy();
+      }
+      // Explicitly stop and clear the audio element just in case WaveSurfer leaves it hanging
+      audio.pause();
+      audio.src = "";
+      audio.load();
+      if (wavesurferRef.current === ws) {
         wavesurferRef.current = null;
       }
     };

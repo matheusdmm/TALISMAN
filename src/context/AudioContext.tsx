@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { Track, Album, albums } from "@/data/albums";
 
 interface AudioContextType {
@@ -26,36 +26,38 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     ? albums.find(a => a.id === currentTrack.albumId) || null 
     : null;
 
-  const playTrack = (track: Track) => {
-    if (currentTrack?.id === track.id) {
-      setIsPlaying(!isPlaying);
-    } else {
-      setCurrentTrack(track);
+  const playTrack = useCallback((track: Track) => {
+    setCurrentTrack(prev => {
+      if (prev?.id === track.id) {
+        setIsPlaying(p => !p);
+        return prev;
+      }
       setIsPlaying(true);
-    }
-  };
+      return track;
+    });
+  }, []);
 
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
+  const togglePlay = useCallback(() => {
+    setIsPlaying(prev => !prev);
+  }, []);
 
-  const playNext = () => {
+  const playNext = useCallback(() => {
     if (!currentTrack || !currentAlbum) return;
     const currentIndex = currentAlbum.tracks.findIndex(t => t.id === currentTrack.id);
     if (currentIndex < currentAlbum.tracks.length - 1) {
       setCurrentTrack(currentAlbum.tracks[currentIndex + 1]);
       setIsPlaying(true);
     }
-  };
+  }, [currentTrack, currentAlbum]);
 
-  const playPrevious = () => {
+  const playPrevious = useCallback(() => {
     if (!currentTrack || !currentAlbum) return;
     const currentIndex = currentAlbum.tracks.findIndex(t => t.id === currentTrack.id);
     if (currentIndex > 0) {
       setCurrentTrack(currentAlbum.tracks[currentIndex - 1]);
       setIsPlaying(true);
     }
-  };
+  }, [currentTrack, currentAlbum]);
 
   return (
     <AudioContext.Provider value={{ 

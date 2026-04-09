@@ -35,7 +35,9 @@ export default function RootLayout({
             <h1 className="text-xl font-bold tracking-tighter uppercase">Talisman</h1>
           </header>
           <main className="flex-1 pb-24">
-            {children}
+            <div className="max-w-7xl mx-auto w-full">
+              {children}
+            </div>
           </main>
           <AudioPlayer />
         </AudioProvider>

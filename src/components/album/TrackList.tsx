@@ -28,7 +28,7 @@ export function TrackList({ tracks }: TrackListProps) {
           <div
             key={track.id}
             onClick={() => playTrack(track)}
-            className={`flex items-center gap-4 px-4 py-3 cursor-pointer transition-colors border-b border-border/50 hover:bg-accent/10 ${
+            className={`flex items-center gap-4 px-4 py-4 md:py-3 cursor-pointer transition-colors border-b border-border/50 hover:bg-accent/10 active:bg-accent/30 relative z-10 ${
               isActive ? "bg-accent/20" : ""
             }`}
           >
