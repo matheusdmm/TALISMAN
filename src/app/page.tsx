@@ -15,7 +15,7 @@ export default function Home() {
       
       <section className="flex-1">
         <div className="px-6 md:px-12 py-8 border-b border-border flex justify-between items-center bg-accent/5">
-          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Discography</h3>
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Discography</h2>
         </div>
         <AlbumGrid />
       </section>
