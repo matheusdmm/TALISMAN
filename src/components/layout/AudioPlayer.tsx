@@ -102,28 +102,28 @@ export function AudioPlayer() {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-12 w-12" 
+                className="h-16 w-16 text-muted-foreground hover:text-foreground active:scale-90 transition-all duration-150" 
                 onClick={playPrevious}
                 disabled={isFirstTrack}
               >
-                <SkipBack className="h-8 w-8 fill-current" />
+                <SkipBack className="h-10 w-10 fill-current" />
               </Button>
               <Button 
                 onClick={togglePlay} 
                 variant="outline" 
                 size="icon" 
-                className="h-20 w-20 rounded-full bg-foreground text-background"
+                className="h-24 w-24 rounded-full bg-foreground text-background active:scale-95 transition-all duration-150 shadow-xl"
               >
-                {isPlaying ? <Pause className="h-10 w-10 fill-current" /> : <Play className="h-10 w-10 fill-current ml-1" />}
+                {isPlaying ? <Pause className="h-12 w-12 fill-current" /> : <Play className="h-12 w-12 fill-current ml-1" />}
               </Button>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-12 w-12" 
+                className="h-16 w-16 text-muted-foreground hover:text-foreground active:scale-90 transition-all duration-150" 
                 onClick={playNext}
                 disabled={isLastTrack}
               >
-                <SkipForward className="h-8 w-8 fill-current" />
+                <SkipForward className="h-10 w-10 fill-current" />
               </Button>
             </div>
 
@@ -147,7 +147,7 @@ export function AudioPlayer() {
       {/* Standard Bar (Minimized/Desktop) */}
       <div 
         className={cn(
-          "fixed bottom-0 left-0 right-0 h-24 bg-background/95 backdrop-blur-lg border-t border-border z-[90] transition-opacity duration-300",
+          "fixed bottom-0 left-0 right-0 h-24 bg-background/95 backdrop-blur-lg border-t border-border z-[90] transition-opacity duration-300 pb-[env(safe-area-inset-bottom)]",
           isExpanded ? "opacity-0 pointer-events-none" : "opacity-100"
         )}
       >
