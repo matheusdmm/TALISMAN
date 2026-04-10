@@ -36,10 +36,18 @@ export function AudioPlayer() {
 
   const handleTouchStart = (e: React.TouchEvent) => setTouchStart(e.touches[0].clientY);
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStart !== null && e.changedTouches[0].clientY - touchStart > 100) setIsExpanded(false);
+    if (touchStart !== null) {
+      const touchEnd = e.changedTouches[0].clientY;
+      const distance = touchEnd - touchStart;
+      // Close if swipe distance is more than 80px
+      if (distance > 80) {
+        setIsExpanded(false);
+      }
+    }
     setTouchStart(null);
   };
 
+  // Return null immediately if no track is active to avoid any "ghost" boxes or shadows
   if (!currentTrack) return null;
 
   const currentIndex = currentAlbum?.tracks.findIndex(t => t.id === currentTrack.id) ?? -1;
@@ -51,29 +59,34 @@ export function AudioPlayer() {
       {/* Mobile Expanded View */}
       <div 
         className={cn(
-          "fixed inset-0 bg-background z-[100] transition-all duration-500 ease-in-out flex flex-col md:hidden",
-          isExpanded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none invisible"
+          "fixed inset-0 bg-background z-[100] transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1) flex flex-col md:hidden",
+          isExpanded ? "translate-y-0" : "translate-y-full"
         )}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="flex flex-col h-dvh px-8 pt-4 pb-12">
-          {/* Header/Minimize */}
-          <div className="flex justify-center mb-8">
+        <div className="flex flex-col h-[100svh] px-8 pt-2 pb-16 relative">
+          {/* Drag Handle */}
+          <div className="w-full flex justify-center py-4 absolute top-0 left-0 right-0 z-10" onClick={() => setIsExpanded(false)}>
+            <div className="w-12 h-1.5 bg-muted-foreground/30 rounded-full" />
+          </div>
+
+          {/* Header/Minimize - Added more spacing */}
+          <div className="flex justify-center mb-6 mt-12 min-h-[48px]">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setIsExpanded(false)}
-              className="h-14 w-14 text-muted-foreground hover:text-foreground active:scale-95 transition-transform"
+              className="h-12 w-12 text-muted-foreground hover:text-foreground active:scale-95 transition-transform"
             >
               <ChevronDown className="h-10 w-10" />
             </Button>
           </div>
 
           {/* Large Artwork */}
-          <div className="flex-1 flex items-center justify-center mb-12">
+          <div className="flex-1 flex items-center justify-center min-h-0 py-4">
             {currentAlbum && (
-              <div className="relative aspect-square w-full max-w-[320px] rounded-xl overflow-hidden shadow-2xl shadow-primary/20 border border-border/50">
+              <div className="relative aspect-square w-full max-w-[300px] xs:max-w-[320px] rounded-xl overflow-hidden shadow-2xl shadow-primary/20 border border-border/50">
                 <Image
                   src={currentAlbum.coverUrl}
                   alt={currentAlbum.title}
@@ -85,63 +98,47 @@ export function AudioPlayer() {
             )}
           </div>
 
-          {/* Track Info */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-black tracking-tight truncate">{currentTrack.title}</h2>
-            <p className="text-lg text-muted-foreground font-medium truncate">{currentAlbum?.title}</p>
-            {currentAlbum?.description && (
-              <p className="text-sm text-muted-foreground/60 mt-1 line-clamp-2 italic">{currentAlbum.description}</p>
-            )}
+          {/* Track Info - Only Track Title */}
+          <div className="flex flex-col items-center justify-center py-6 text-center z-10">
+            <h2 className="text-3xl xs:text-5xl font-black tracking-tighter leading-tight text-white mb-2 drop-shadow-sm px-4">
+              {currentTrack.title}
+            </h2>
           </div>
 
           {/* Waveform (Full Width on Mobile) */}
-          <div className="mb-8 md:hidden">
-            {isExpanded && <WaveformPlayer />}
+          <div className="w-full px-4 mb-8">
+            <WaveformPlayer />
           </div>
 
           {/* Controls */}
-          <div className="flex flex-col gap-8">
-            <div className="flex items-center justify-between px-4">
+          <div className="mt-auto pb-[env(safe-area-inset-bottom)]">
+            <div className="flex items-center justify-around max-w-sm mx-auto">
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-16 w-16 text-muted-foreground hover:text-foreground active:scale-90 transition-all duration-150" 
-                onClick={playPrevious}
+                className="h-16 w-16 text-muted-foreground hover:text-foreground active:scale-90 transition-all" 
+                onClick={(e) => { e.stopPropagation(); playPrevious(); }}
                 disabled={isFirstTrack}
               >
-                <SkipBack className="h-10 w-10 fill-current" />
+                <SkipBack className="h-8 w-8 fill-current" />
               </Button>
               <Button 
-                onClick={togglePlay} 
+                onClick={(e) => { e.stopPropagation(); togglePlay(); }} 
                 variant="outline" 
                 size="icon" 
-                className="h-24 w-24 rounded-full bg-foreground text-background active:scale-95 transition-all duration-150 shadow-xl"
+                className="h-24 w-24 rounded-full bg-foreground text-background active:scale-95 transition-all shadow-2xl border-none"
               >
-                {isPlaying ? <Pause className="h-12 w-12 fill-current" /> : <Play className="h-12 w-12 fill-current ml-1" />}
+                {isPlaying ? <Pause className="h-10 w-10 fill-current" /> : <Play className="h-10 w-10 fill-current ml-1" />}
               </Button>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-16 w-16 text-muted-foreground hover:text-foreground active:scale-90 transition-all duration-150" 
-                onClick={playNext}
+                className="h-16 w-16 text-muted-foreground hover:text-foreground active:scale-90 transition-all" 
+                onClick={(e) => { e.stopPropagation(); playNext(); }}
                 disabled={isLastTrack}
               >
-                <SkipForward className="h-10 w-10 fill-current" />
+                <SkipForward className="h-8 w-8 fill-current" />
               </Button>
-            </div>
-
-            {/* Volume in Full Screen */}
-            <div className="flex items-center gap-4 px-4">
-              <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0" onClick={toggleMute}>
-                <Volume2 className="h-5 w-5 text-muted-foreground" />
-              </Button>
-              <Slider
-                value={[volume]}
-                max={1}
-                step={0.01}
-                onValueChange={(val) => setVolume(Array.isArray(val) ? val[0] : val)}
-                className="flex-1"
-              />
             </div>
           </div>
         </div>
@@ -150,8 +147,9 @@ export function AudioPlayer() {
       {/* Standard Bar (Minimized/Desktop) */}
       <div 
         className={cn(
-          "fixed bottom-0 left-0 right-0 h-24 bg-background/95 backdrop-blur-lg border-t border-border z-[90] transition-opacity duration-300 pb-[env(safe-area-inset-bottom)]",
-          isExpanded ? "opacity-0 pointer-events-none" : "opacity-100"
+          "fixed bottom-0 left-0 right-0 h-24 bg-background/95 backdrop-blur-lg border-t border-border z-[90] transition-all duration-500 ease-in-out pb-[env(safe-area-inset-bottom)]",
+          isExpanded ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
+          !currentTrack && "translate-y-full opacity-0"
         )}
       >
         <div 
@@ -227,7 +225,7 @@ export function AudioPlayer() {
               </Button>
             </div>
             <div className="hidden md:block w-full">
-              {!isExpanded && <WaveformPlayer />}
+              <WaveformPlayer />
             </div>
           </div>
 

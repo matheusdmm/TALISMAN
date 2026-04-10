@@ -4,18 +4,30 @@ Talisman is a raw, no-nonsense digital stage for the music you make. No bloated 
 
 ## Features
 
-- **Raw Data Control:** Your discography in a clean JSON structure. Edit it in a text editor, not an admin panel.
+- **Sonic Visualization:** Real-time waveform rendering for every track, powered by `wavesurfer.js`.
+- **Global Audio Persistence:** A sticky player that keeps the music alive while you navigate through albums and tracklists.
+- **Admin Control Room:** A dedicated dashboard at `/admin` to manage your discography. Export/Import your `albums.json` without touching a single bracket.
 - **Atmospheric Depth:** An immersive, low-light aesthetic that lets the music do the heavy lifting.
+- **Dynamic Routing:** Unique, shareable links for every album and release.
 - **Mobile-First Mechanics:** Intuitive controls designed for thumb-flick navigation—swipe to close, tap to play.
-- **Persistence:** Remembers your volume so you don't have to.
-- **Fast & Unapologetic:** Minimal code, maximum output.
+- **Fast & Unapologetic:** Minimal code, maximum output. Built with React 19 and Next.js 16.
 
 ## Technologies Used
 
-- **Next.js (App Router):** Framework for server-rendered, performant web pages.
-- **React:** Component-based library for building interactive UIs.
-- **Tailwind CSS:** Utility-first framework for rapid, maintainable styling.
-- **TypeScript:** Ensures type safety for discography and audio data structures.
+- **Next.js (App Router):** High-performance framework for the modern web.
+- **React 19:** The latest in UI component logic and server actions.
+- **Tailwind CSS 4:** Utility-first styling for that raw, industrial look.
+- **WaveSurfer.js:** Professional audio visualization and playback engine.
+- **Lucide React:** Clean, sharp iconography for navigation.
+- **TypeScript:** Ensuring your data structures don't break mid-solo.
+
+## The Admin Dashboard (`/admin`)
+
+Managing a discography shouldn't feel like debugging a mainframe. Access the Admin Dashboard to:
+- **Add Albums:** Quickly create new releases with covers and descriptions.
+- **Manage Tracks:** Drop in track titles, audio URLs (local or hosted), and durations.
+- **JSON Sync:** Download your updated `albums.json` and drop it into `src/data/albums.json`. No more syntax errors.
+- **Self-Hosting Guide:** Built-in instructions on where to put your MP3s and JPGs.
 
 ## Getting Started
 
@@ -44,9 +56,23 @@ Talisman is a raw, no-nonsense digital stage for the music you make. No bloated 
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Data Configuration
+## Deployment & Performance
 
-To update the band's discography, modify `src/data/albums.json`. The structure supports albums and track metadata, including audio URLs and track durations.
+Talisman is built to live on the edge. While it runs anywhere, it's optimized for **Vercel** to ensure your music reaches the listener without lag.
+
+- **Zero-Config Deployment:** Push your code to GitHub, connect to Vercel, and you're live. No server management, no headaches.
+- **Global Edge Network:** Your audio assets and cover art are served from the edge, meaning low latency whether your fans are in a basement in Berlin or a rooftop in Tokyo.
+- **Automatic Rebuilds:** Every time you update `albums.json` or drop new tracks into your repo, Vercel triggers a fresh build instantly.
+
+Simply click the **Deploy** button on Vercel and point it to your fork.
+
+## Data & Assets
+
+To update the band's discography, use the `/admin` route or manually modify `src/data/albums.json`. 
+
+Place your local assets in the `public` folder:
+- **Covers:** `public/audio/[album-id]/cover.jpg`
+- **Audio:** `public/audio/[album-id]/[track-filename].mp3`
 
 ## License
 

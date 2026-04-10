@@ -11,12 +11,20 @@ interface TrackListProps {
 }
 
 export function TrackList({ tracks }: TrackListProps) {
-  const { currentTrack, isPlaying, playTrack } = useAudio();
+  const { currentTrack, isPlaying, playTrack: playTrackAction, togglePlay } = useAudio();
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const playTrack = (track: Track) => {
+    if (currentTrack?.id === track.id) {
+      togglePlay();
+    } else {
+      playTrackAction(track);
+    }
   };
 
   return (
@@ -28,7 +36,7 @@ export function TrackList({ tracks }: TrackListProps) {
           <div
             key={track.id}
             onClick={() => playTrack(track)}
-            className={`flex items-center gap-4 px-4 py-4 md:py-3 cursor-pointer transition-colors border-b border-border/50 hover:bg-accent/10 active:bg-accent/30 relative z-10 ${
+            className={`flex items-center gap-4 px-4 py-5 md:py-3 cursor-pointer transition-all border-b border-border/50 hover:bg-accent/10 active:bg-accent/20 active:scale-[0.98] relative z-10 ${
               isActive ? "bg-accent/20" : ""
             }`}
           >
@@ -50,7 +58,7 @@ export function TrackList({ tracks }: TrackListProps) {
               {isActive && isPlaying ? (
                 <Pause className="h-4 w-4 fill-primary text-primary" />
               ) : (
-                <Play className={`h-4 w-4 ${isActive ? "fill-primary text-primary" : "text-muted-foreground opacity-0 group-hover:opacity-100"}`} />
+                <Play className={`h-4 w-4 ${isActive ? "fill-primary text-primary" : "text-muted-foreground md:opacity-0 group-hover:opacity-100"}`} />
               )}
             </div>
           </div>

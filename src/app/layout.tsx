@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { AudioProvider } from '@/context/AudioContext';
-import { AudioPlayer } from '@/components/layout/AudioPlayer';
+import { LayoutWrapper } from '@/components/layout/LayoutWrapper';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -40,17 +40,16 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground [padding-top:env(safe-area-inset-top)] [padding-bottom:env(safe-area-inset-bottom)]">
+      <body className="min-h-full flex flex-col bg-background text-foreground [padding-top:env(safe-area-inset-top)]">
         <AudioProvider>
-          <header className="h-16 border-b border-border flex items-center px-8 sticky top-0 bg-background/80 backdrop-blur-md z-40">
-            <h1 className="text-3xl font-bold tracking-tighter uppercase">
+          <header className="h-16 border-b border-border flex items-center px-6 md:px-8 sticky top-0 bg-background/80 backdrop-blur-md z-40">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tighter uppercase">
               Talisman
             </h1>
           </header>
-          <main className="flex-1 pb-24">
-            <div className="max-w-7xl mx-auto w-full">{children}</div>
-          </main>
-          <AudioPlayer />
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
         </AudioProvider>
       </body>
     </html>

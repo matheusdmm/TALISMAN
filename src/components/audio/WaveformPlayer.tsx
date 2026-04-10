@@ -7,96 +7,63 @@ import { useAudio } from '@/context/AudioContext';
 export function WaveformPlayer() {
   const containerRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
-  const { currentTrack, isPlaying, volume, togglePlay, setVolume, playNext } =
-    useAudio();
+  const { currentTrack, audioRef } = useAudio();
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current || !currentTrack) return;
-
-    setIsReady(false);
-    setIsLoading(true);
-    setError(null);
+    if (!containerRef.current || !audioRef.current || wavesurferRef.current) return;
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
-      waveColor: '#4f4f4f',
+      media: audioRef.current,
+      waveColor: '#262626',
       progressColor: '#ffffff',
-      cursorColor: '#ffffff',
-      barWidth: 2,
-      barRadius: 3,
-      height: 40,
-      normalize: true,
-      minPxPerSec: 1,
+      cursorColor: 'transparent',
+      barWidth: 3,
+      barGap: 3,
+      barRadius: 2,
+      height: 60,
+      normalize: false,
+      interact: true,
+      dragToSeek: true,
     });
 
-    ws.setVolume(volume);
-
-    ws.load(currentTrack.audioUrl).catch((err) => {
-      if (err.name === 'AbortError') return;
-      console.error('Error loading audio:', err);
-      setError('Failed to load audio. Please check your connection.');
-      setIsLoading(false);
-    });
     wavesurferRef.current = ws;
 
     ws.on('ready', () => {
-      setIsReady(true);
       setIsLoading(false);
-      setError(null);
       setDuration(ws.getDuration());
-      if (isPlaying) {
-        ws.play().catch(() => {});
-      }
     });
 
-    ws.on('error', (err) => {
-      if (err instanceof Error && err.name === 'AbortError') return;
-      console.error('WaveSurfer error:', err);
-      setError('An error occurred with the audio player.');
-      setIsLoading(false);
-    });
-
+    ws.on('loading', () => setIsLoading(true));
+    
     ws.on('audioprocess', () => {
       setCurrentTime(ws.getCurrentTime());
     });
 
-    ws.on('finish', () => {
-      playNext();
+    ws.on('seeking', () => {
+      setCurrentTime(ws.getCurrentTime());
     });
 
     return () => {
-      if (ws) {
-        ws.pause();
-        ws.destroy();
-      }
-      if (wavesurferRef.current === ws) {
-        wavesurferRef.current = null;
-      }
+      ws.destroy();
+      wavesurferRef.current = null;
     };
-  }, [currentTrack?.id, playNext]);
+  }, [audioRef]);
 
+  // Update duration when track changes
   useEffect(() => {
-    if (wavesurferRef.current && isReady) {
-      if (isPlaying) {
-        wavesurferRef.current.play().catch(() => {});
-      } else {
-        wavesurferRef.current.pause();
-      }
+    if (audioRef.current) {
+      const updateDuration = () => setDuration(audioRef.current?.duration || 0);
+      audioRef.current.addEventListener('loadedmetadata', updateDuration);
+      return () => audioRef.current?.removeEventListener('loadedmetadata', updateDuration);
     }
-  }, [isPlaying, isReady]);
-
-  useEffect(() => {
-    if (wavesurferRef.current) {
-      wavesurferRef.current.setVolume(volume);
-    }
-  }, [volume]);
+  }, [currentTrack, audioRef]);
 
   const formatTime = (time: number) => {
+    if (isNaN(time) || time === Infinity) return '0:00';
     const mins = Math.floor(time / 60);
     const secs = Math.floor(time % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -106,28 +73,20 @@ export function WaveformPlayer() {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex items-center gap-4 relative h-10">
-        {isLoading && !error && (
+      <div className="flex items-center gap-4 relative h-16">
+        {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10">
             <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 
-        {error ? (
-          <div className="flex-1 flex items-center justify-center text-xs text-destructive font-medium bg-destructive/10 rounded px-4 h-full">
-            {error}
-          </div>
-        ) : (
-          <>
-            <span className="text-xs text-muted-foreground w-10 text-right">
-              {formatTime(currentTime)}
-            </span>
-            <div ref={containerRef} className="flex-1" />
-            <span className="text-xs text-muted-foreground w-10">
-              {formatTime(duration)}
-            </span>
-          </>
-        )}
+        <span className="text-xs text-muted-foreground w-12 font-mono">
+          {formatTime(currentTime)}
+        </span>
+        <div ref={containerRef} className="flex-1 min-h-[60px]" />
+        <span className="text-xs text-muted-foreground w-12 font-mono text-right">
+          {formatTime(duration)}
+        </span>
       </div>
     </div>
   );

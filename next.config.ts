@@ -9,7 +9,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Allow mobile devices on the local network to access dev resources
   allowedDevOrigins: ['192.168.0.3', 'localhost:3000'],
 };
 
