@@ -64,7 +64,7 @@ export function WaveformPlayer() {
     ws.on("error", (err) => {
       // Ignore AbortError as it's usually intentional (e.g. track change)
       if (err instanceof Error && err.name === "AbortError") return;
-      if (typeof err === 'string' && err.includes('AbortError')) return;
+      if (typeof err === 'string' && (err as any).includes('AbortError')) return;
       
       console.error("WaveSurfer error:", err);
       setError("An error occurred with the audio player.");
