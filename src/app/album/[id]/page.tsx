@@ -1,10 +1,10 @@
-import React from "react";
-import { albums } from "@/data/albums";
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { TrackList } from "@/components/album/TrackList";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import React from 'react';
+import { albums } from '@/data/albums';
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import { TrackList } from '@/components/album/TrackList';
+import Link from 'next/link';
+import { ChevronLeft } from 'lucide-react';
 
 interface AlbumPageProps {
   params: Promise<{ id: string }>;
@@ -12,8 +12,8 @@ interface AlbumPageProps {
 
 export default async function AlbumPage({ params }: AlbumPageProps) {
   const { id } = await params;
-  const [showMovingBg, setShowMovingBg] = React.useState(true);
   const album = albums.find((a) => a.id === id);
+  const showMovingBg = true;
 
   if (!album) {
     notFound();
@@ -24,20 +24,14 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
       {showMovingBg && <div className="bg-depth-animate" />}
 
       {/* Header / Back Link */}
-      <div className="px-8 py-6 flex-none flex justify-between items-center">
-        <Link 
-          href="/" 
+      <div className="px-8 py-6 flex-none">
+        <Link
+          href="/"
           className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
         >
           <ChevronLeft className="mr-1 h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to Discography
         </Link>
-        <button 
-          onClick={() => setShowMovingBg(!showMovingBg)}
-          className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {showMovingBg ? "Plain Bg" : "Moving Bg"}
-        </button>
       </div>
 
       <div className="flex flex-col md:flex-row gap-12 px-8 pt-8 flex-1 overflow-y-auto scrollbar-hide">
@@ -54,7 +48,9 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             />
           </div>
           <div className="mt-8">
-            <h1 className="text-4xl font-extrabold tracking-tighter">{album.title}</h1>
+            <h1 className="text-4xl font-extrabold tracking-tighter">
+              {album.title}
+            </h1>
             <p className="text-xl text-muted-foreground mt-1">{album.artist}</p>
             <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
               <span>{album.releaseYear}</span>
@@ -67,7 +63,9 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
         {/* Tracklist */}
         <div className="flex-1">
           <div className="mb-8">
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-6">Tracklist</h2>
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-6">
+              Tracklist
+            </h2>
             <TrackList tracks={album.tracks} />
           </div>
         </div>
