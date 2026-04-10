@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export function AlbumGrid() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6 md:p-8">
       {albums.map((album) => (
         <Link key={album.id} href={`/album/${album.id}`}>
           <Card className="group cursor-pointer overflow-hidden border-none bg-transparent hover:bg-accent/5 transition-all duration-300 hover:shadow-lg">

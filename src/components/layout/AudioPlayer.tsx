@@ -22,6 +22,23 @@ export function AudioPlayer() {
   } = useAudio();
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [prevVolume, setPrevVolume] = useState(0.8);
+
+  const toggleMute = () => {
+    if (volume > 0) {
+      setPrevVolume(volume);
+      setVolume(0);
+    } else {
+      setVolume(prevVolume);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => setTouchStart(e.touches[0].clientY);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart !== null && e.changedTouches[0].clientY - touchStart > 100) setIsExpanded(false);
+    setTouchStart(null);
+  };
 
   if (!currentTrack) return null;
 
@@ -37,17 +54,19 @@ export function AudioPlayer() {
           "fixed inset-0 bg-background z-[100] transition-all duration-500 ease-in-out flex flex-col md:hidden",
           isExpanded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none invisible"
         )}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
-        <div className="flex flex-col h-full px-8 pt-4 pb-12">
+        <div className="flex flex-col h-dvh px-8 pt-4 pb-12">
           {/* Header/Minimize */}
           <div className="flex justify-center mb-8">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setIsExpanded(false)}
-              className="h-10 w-10 text-muted-foreground hover:text-foreground"
+              className="h-14 w-14 text-muted-foreground hover:text-foreground active:scale-95 transition-transform"
             >
-              <ChevronDown className="h-8 w-8" />
+              <ChevronDown className="h-10 w-10" />
             </Button>
           </div>
 
@@ -110,7 +129,9 @@ export function AudioPlayer() {
 
             {/* Volume in Full Screen */}
             <div className="flex items-center gap-4 px-4">
-              <Volume2 className="h-5 w-5 text-muted-foreground" />
+              <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0" onClick={toggleMute}>
+                <Volume2 className="h-5 w-5 text-muted-foreground" />
+              </Button>
               <Slider
                 value={[volume]}
                 max={1}
@@ -161,7 +182,7 @@ export function AudioPlayer() {
               }} 
               variant="ghost" 
               size="icon" 
-              className="h-10 w-10 rounded-full md:hidden"
+              className="h-10 w-10 rounded-full md:hidden active:scale-95 transition-transform"
             >
               {isPlaying ? <Pause className="h-5 w-5 fill-current" /> : <Play className="h-5 w-5 fill-current ml-0.5" />}
             </Button>
@@ -173,7 +194,7 @@ export function AudioPlayer() {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 hover:bg-accent/20" 
+                className="h-8 w-8 hover:bg-accent/20 active:scale-95 transition-transform" 
                 onClick={playPrevious}
                 disabled={isFirstTrack}
               >
@@ -183,14 +204,14 @@ export function AudioPlayer() {
                 onClick={togglePlay} 
                 variant="outline" 
                 size="icon" 
-                className="h-10 w-10 rounded-full bg-foreground text-background hover:scale-105 transition-transform"
+                className="h-10 w-10 rounded-full bg-foreground text-background hover:scale-105 transition-transform active:scale-95"
               >
                 {isPlaying ? <Pause className="h-5 w-5 fill-current" /> : <Play className="h-5 w-5 fill-current ml-0.5" />}
               </Button>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 hover:bg-accent/20" 
+                className="h-8 w-8 hover:bg-accent/20 active:scale-95 transition-transform" 
                 onClick={playNext}
                 disabled={isLastTrack}
               >
@@ -202,7 +223,9 @@ export function AudioPlayer() {
 
           {/* Volume Control (Desktop Only) */}
           <div className="hidden md:flex items-center gap-3 w-1/4 justify-end">
-            <Volume2 className="h-4 w-4 text-muted-foreground" />
+            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={toggleMute}>
+              <Volume2 className="h-4 w-4 text-muted-foreground" />
+            </Button>
             <Slider
               value={[volume]}
               max={1}

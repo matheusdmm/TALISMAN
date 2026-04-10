@@ -128,3 +128,29 @@
     @apply font-sans;
   }
 }
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.bg-depth-animate {
+  background: linear-gradient(-45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}

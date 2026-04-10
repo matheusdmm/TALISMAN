@@ -19,9 +19,10 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
   }
 
   return (
-    <div className="flex flex-col min-h-full">
+    <div className="flex flex-col min-h-screen overflow-hidden">
+      <div className="bg-depth-animate" />
       {/* Header / Back Link */}
-      <div className="px-8 py-6">
+      <div className="px-8 py-6 flex-none">
         <Link 
           href="/" 
           className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
@@ -31,7 +32,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
         </Link>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-12 px-8 pb-20">
+      <div className="flex flex-col md:flex-row gap-12 px-8 pt-8 flex-1 overflow-y-auto scrollbar-hide">
         {/* Album Artwork */}
         <div className="w-full md:w-1/3 lg:w-1/4">
           <div className="relative aspect-square rounded-sm overflow-hidden shadow-2xl border border-border/50">
