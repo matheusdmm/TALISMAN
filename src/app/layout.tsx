@@ -21,9 +21,9 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Talisman | Official Website',
+  title: 'Talisman | Portfolio Framework',
   description:
-    'Official website for the band Talisman. High-fidelity audio sharing and discography.',
+    'Framework for portfolio high-fidelity audio sharing and discography.',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
