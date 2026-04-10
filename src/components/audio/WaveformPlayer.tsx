@@ -78,7 +78,7 @@ export function WaveformPlayer() {
         wavesurferRef.current = null;
       }
     };
-  }, [currentTrack.id, playNext]);
+  }, [currentTrack?.id, playNext]);
 
   useEffect(() => {
     if (wavesurferRef.current && isReady) {
