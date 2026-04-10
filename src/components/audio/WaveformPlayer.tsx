@@ -3,9 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { useAudio } from '@/context/AudioContext';
-import { Play, Pause, Volume2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
 
 export function WaveformPlayer() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,12 +22,8 @@ export function WaveformPlayer() {
     setIsLoading(true);
     setError(null);
 
-    const audio = new Audio();
-    audio.crossOrigin = 'anonymous';
-
     const ws = WaveSurfer.create({
       container: containerRef.current,
-      media: audio,
       waveColor: '#4f4f4f',
       progressColor: '#ffffff',
       cursorColor: '#ffffff',
@@ -41,7 +34,6 @@ export function WaveformPlayer() {
       minPxPerSec: 1,
     });
 
-    // Apply current volume immediately to the new instance
     ws.setVolume(volume);
 
     ws.load(currentTrack.audioUrl).catch((err) => {
@@ -63,12 +55,7 @@ export function WaveformPlayer() {
     });
 
     ws.on('error', (err) => {
-      // Ignore AbortError as it's usually intentional (e.g. track change)
-      // hopefully
       if (err instanceof Error && err.name === 'AbortError') return;
-      if (typeof err === 'string' && (err as any).includes('AbortError'))
-        return;
-
       console.error('WaveSurfer error:', err);
       setError('An error occurred with the audio player.');
       setIsLoading(false);
@@ -82,30 +69,16 @@ export function WaveformPlayer() {
       playNext();
     });
 
-    const handleResize = () => {
-      if (ws) {
-        // WaveSurfer v7 handles resize automatically if redraw is called or if it's responsive
-        // but an explicit call to draw helps in some edge cases.
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      window.removeEventListener('resize', handleResize);
       if (ws) {
         ws.pause();
         ws.destroy();
       }
-      // Explicitly stop and clear the audio element just in case WaveSurfer leaves it hanging
-      audio.pause();
-      audio.src = '';
-      audio.load();
       if (wavesurferRef.current === ws) {
         wavesurferRef.current = null;
       }
     };
-  }, [currentTrack, playNext]);
+  }, [currentTrack.id, playNext]);
 
   useEffect(() => {
     if (wavesurferRef.current && isReady) {
