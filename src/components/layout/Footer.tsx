@@ -25,7 +25,7 @@ export function Footer() {
       
       <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-border/50 flex justify-between items-center text-xs text-muted-foreground">
         <p>© {new Date().getFullYear()} Talisman Project. Built with passion.</p>
-        <p className="uppercase tracking-widest">v0.1.0</p>
+        <p className="uppercase tracking-widest">v1.0.0</p>
       </div>
     </footer>
   );
