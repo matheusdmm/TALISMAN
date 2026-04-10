@@ -1,22 +1,23 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { AudioProvider } from "@/context/AudioContext";
-import { AudioPlayer } from "@/components/layout/AudioPlayer";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import { AudioProvider } from '@/context/AudioContext';
+import { AudioPlayer } from '@/components/layout/AudioPlayer';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Talisman | Official Website",
-  description: "Official website for the band Talisman. High-fidelity audio sharing and discography.",
+  title: 'Talisman | Official Website',
+  description:
+    'Official website for the band Talisman. High-fidelity audio sharing and discography.',
 };
 
 export default function RootLayout({
@@ -32,12 +33,12 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <AudioProvider>
           <header className="h-16 border-b border-border flex items-center px-8 sticky top-0 bg-background/80 backdrop-blur-md z-40">
-            <h1 className="text-xl font-bold tracking-tighter uppercase">Talisman</h1>
+            <h1 className="text-3xl font-bold tracking-tighter uppercase">
+              Talisman
+            </h1>
           </header>
           <main className="flex-1 pb-24">
-            <div className="max-w-7xl mx-auto w-full">
-              {children}
-            </div>
+            <div className="max-w-7xl mx-auto w-full">{children}</div>
           </main>
           <AudioPlayer />
         </AudioProvider>

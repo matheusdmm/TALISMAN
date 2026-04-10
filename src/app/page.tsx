@@ -1,4 +1,5 @@
 import { AlbumGrid } from "@/components/album/AlbumGrid";
+import { Footer } from "@/components/layout/Footer";
 
 export default function Home() {
   return (
@@ -12,13 +13,14 @@ export default function Home() {
           waveform-centric playback, and the journey of our sound.
         </p>
       </section>
-      
+
       <section className="flex-1">
         <div className="px-6 md:px-12 py-8 border-b border-border flex justify-between items-center bg-accent/5">
-          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Discography</h2>
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Discography</h2> 
         </div>
         <AlbumGrid />
       </section>
+      <Footer />
     </div>
   );
 }
