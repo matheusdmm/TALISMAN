@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Talisman Starter Kit
+
+Talisman is a raw, no-nonsense digital stage for the music you make. No bloated metrics, no corporate templates, no filler. Just a direct line between the speakers and the listener. Built for bands that prefer the basement over the boardroom.
+
+## Features
+
+- **Raw Data Control:** Your discography in a clean JSON structure. Edit it in a text editor, not an admin panel.
+- **Atmospheric Depth:** An immersive, low-light aesthetic that lets the music do the heavy lifting.
+- **Mobile-First Mechanics:** Intuitive controls designed for thumb-flick navigation—swipe to close, tap to play.
+- **Persistence:** Remembers your volume so you don't have to.
+- **Fast & Unapologetic:** Minimal code, maximum output.
+
+## Technologies Used
+
+- **Next.js (App Router):** Framework for server-rendered, performant web pages.
+- **React:** Component-based library for building interactive UIs.
+- **Tailwind CSS:** Utility-first framework for rapid, maintainable styling.
+- **TypeScript:** Ensures type safety for discography and audio data structures.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd talisman
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To update the band's discography, modify `src/data/albums.json`. The structure supports albums and track metadata, including audio URLs and track durations.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is open-source and licensed under the [MIT License](LICENSE).
