@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { Album, Track } from '@/data/albums';
 import { Button } from '@/components/ui/button';
-import { Trash2, Plus, Download, Music, Image, Calendar, User, Upload, FileJson } from 'lucide-react';
+import { Trash2, Plus, Download, Music, Image as ImageIcon, Calendar, User, Upload, FileJson, Info, ExternalLink, RefreshCw } from 'lucide-react';
 
 export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] }) {
   const [albums, setAlbums] = useState<Album[]>(initialAlbums);
@@ -53,7 +53,6 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
       }
     };
     reader.readAsText(file);
-    // Reset input
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -62,7 +61,7 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
       id: `album-${Date.now()}`,
       title: 'New Album',
       artist: 'Talisman',
-      coverUrl: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=800&q=80',
+      coverUrl: '/covers/new-album.jpg',
       releaseYear: new Date().getFullYear(),
       tracks: []
     };
@@ -82,11 +81,12 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
   const addTrack = (albumId: string) => {
     setAlbums(albums.map(a => {
       if (a.id === albumId) {
+        const trackId = `track-${Date.now()}`;
         const newTrack: Track = {
-          id: `track-${Date.now()}`,
+          id: trackId,
           albumId: a.id,
           title: 'New Track',
-          audioUrl: 'https://raw.githubusercontent.com/rafaelreis-hotmart/Audio-Sample-files/master/sample.mp3',
+          audioUrl: `/audio/${a.id}/new-track.mp3`,
           duration: 30
         };
         return { ...a, tracks: [...a.tracks, newTrack] };
@@ -116,41 +116,32 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
     }));
   };
 
+  const generateLocalPath = (albumId: string, type: 'cover' | 'audio', trackTitle?: string) => {
+    if (type === 'cover') {
+      return `/covers/${albumId}.jpg`;
+    }
+    const cleanTitle = (trackTitle || 'track').toLowerCase().replace(/\s+/g, '-');
+    return `/audio/${albumId}/${cleanTitle}.mp3`;
+  };
+
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border pb-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tighter uppercase leading-none mb-2">Music Admin</h1>
-          <p className="text-muted-foreground font-medium italic">Manage data & download albums.json</p>
+          <h1 className="text-4xl font-black tracking-tighter uppercase leading-none mb-2 italic">Music Admin</h1>
+          <p className="text-muted-foreground font-medium italic">Manage discography & self-host assets</p>
         </div>
         <div className="flex items-center gap-3">
           {message && <span className="text-xs font-black uppercase text-primary animate-pulse mr-2">{message}</span>}
           
-          <input 
-            type="file" 
-            accept=".json" 
-            className="hidden" 
-            ref={fileInputRef} 
-            onChange={handleFileUpload} 
-          />
+          <input type="file" accept=".json" className="hidden" ref={fileInputRef} onChange={handleFileUpload} />
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => fileInputRef.current?.click()}
-            className="gap-2 font-black uppercase tracking-tighter"
-          >
-            <Upload className="size-4" />
-            Load JSON
+          <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-2 font-black uppercase tracking-tighter">
+            <Upload className="size-4" /> Load JSON
           </Button>
 
-          <Button 
-            onClick={handleDownload} 
-            disabled={isProcessing} 
-            className="gap-2 bg-primary text-primary-foreground font-black uppercase tracking-tighter hover:scale-105 transition-transform px-6 h-10"
-          >
-            <Download className="size-4" />
-            {isProcessing ? 'Generating...' : 'Download albums.json'}
+          <Button onClick={handleDownload} disabled={isProcessing} className="gap-2 bg-primary text-primary-foreground font-black uppercase tracking-tighter hover:scale-105 transition-transform px-6 h-10 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]">
+            <Download className="size-4" /> {isProcessing ? 'Generating...' : 'Download albums.json'}
           </Button>
         </div>
       </div>
@@ -164,7 +155,14 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
               {/* Album Info */}
               <div className="w-full lg:w-1/3 space-y-4">
                 <div className="aspect-square bg-muted rounded-xl overflow-hidden ring-1 ring-border mb-4 relative group/cover">
-                  <img src={album.coverUrl} alt={album.title} className="w-full h-full object-cover opacity-80 group-hover/cover:opacity-100 transition-opacity" />
+                  {album.coverUrl.startsWith('http') ? (
+                    <img src={album.coverUrl} alt={album.title} className="w-full h-full object-cover opacity-80 group-hover/cover:opacity-100 transition-opacity" />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-accent/10 border-2 border-dashed border-border/50 text-muted-foreground p-6 text-center">
+                      <ImageIcon className="size-12 mb-2 opacity-20" />
+                      <p className="text-[10px] font-black uppercase tracking-widest leading-tight">Local Asset:<br/>{album.coverUrl}</p>
+                    </div>
+                  )}
                   <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover/cover:opacity-100 transition-opacity">
                     <span className="text-xs font-black uppercase text-white tracking-widest">Preview</span>
                   </div>
@@ -210,7 +208,7 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
                         <FileJson className="size-3" /> ID
                       </label>
                       <input
-                        className="w-full bg-accent/10 border border-border/50 rounded-lg px-3 py-2 text-xs font-mono font-medium opacity-50 focus:opacity-100 transition-opacity"
+                        className="w-full bg-accent/10 border border-border/50 rounded-lg px-3 py-2 text-xs font-mono font-medium opacity-50"
                         value={album.id}
                         readOnly
                       />
@@ -218,9 +216,17 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                      <Image className="size-3" /> Cover URL
-                    </label>
+                    <div className="flex justify-between items-center">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                        <ImageIcon className="size-3" /> Cover URL / Path
+                      </label>
+                      <button 
+                        onClick={() => updateAlbum(album.id, { coverUrl: generateLocalPath(album.id, 'cover') })}
+                        className="text-[10px] font-black uppercase text-primary hover:underline"
+                      >
+                        Use Local
+                      </button>
+                    </div>
                     <input
                       className="w-full bg-accent/10 border border-border/50 rounded-lg px-3 py-2 text-xs font-mono focus:bg-accent/20 transition-colors"
                       value={album.coverUrl}
@@ -245,9 +251,9 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
 
                 <div className="grid gap-3">
                   {album.tracks.map((track) => (
-                    <div key={track.id} className="group/track bg-card border border-border/50 rounded-xl p-4 flex gap-4 items-start transition-all hover:bg-accent/5 hover:border-border">
+                    <div key={track.id} className="group/track bg-card border border-border/50 rounded-xl p-4 flex gap-4 items-start transition-all hover:bg-accent/5 hover:border-border shadow-sm">
                       <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4">
-                        <div className="md:col-span-5 space-y-1">
+                        <div className="md:col-span-4 space-y-1">
                           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Track Title</label>
                           <input
                             className="w-full bg-transparent border-none text-sm font-bold focus:outline-none focus:ring-1 focus:ring-primary/20 rounded px-1"
@@ -255,8 +261,16 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
                             onChange={(e) => updateTrack(album.id, track.id, { title: e.target.value })}
                           />
                         </div>
-                        <div className="md:col-span-5 space-y-1">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Audio Source</label>
+                        <div className="md:col-span-6 space-y-1">
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Audio Source</label>
+                            <button 
+                              onClick={() => updateTrack(album.id, track.id, { audioUrl: generateLocalPath(album.id, 'audio', track.title) })}
+                              className="text-[10px] font-black uppercase text-primary hover:underline"
+                            >
+                              Use Local
+                            </button>
+                          </div>
                           <input
                             className="w-full bg-transparent border-none text-[10px] font-mono focus:outline-none focus:ring-1 focus:ring-primary/20 rounded px-1 opacity-60 focus:opacity-100"
                             value={track.audioUrl}
@@ -300,7 +314,7 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
 
         <Button 
           variant="outline" 
-          className="w-full py-16 border-dashed border-2 hover:bg-accent/5 hover:border-primary/50 transition-all gap-4 flex flex-col group"
+          className="w-full py-16 border-dashed border-2 hover:bg-accent/5 hover:border-primary/50 transition-all gap-4 flex flex-col group rounded-3xl"
           onClick={addAlbum}
         >
           <div className="size-12 rounded-full border border-border flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all">
@@ -311,6 +325,47 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
             <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Expand your discography</p>
           </div>
         </Button>
+      </div>
+
+      {/* Self-Hosting Guide */}
+      <div className="mt-20 p-8 bg-accent/5 rounded-3xl border border-border/50 border-dashed">
+        <div className="flex items-center gap-2 mb-4">
+          <Info className="size-5 text-primary" />
+          <h2 className="text-xl font-black uppercase tracking-tighter">Self-Hosting & GitHub Guide</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-bold uppercase text-xs mb-1 text-primary">1. Download & Replace</h3>
+              <p className="text-muted-foreground leading-relaxed">Download the <code className="bg-accent/20 px-1 rounded">albums.json</code> and replace the file at <code className="bg-accent/20 px-1 rounded">src/data/albums.json</code> in your repository.</p>
+            </div>
+            <div>
+              <h3 className="font-bold uppercase text-xs mb-1 text-primary">2. Upload Covers</h3>
+              <p className="text-muted-foreground leading-relaxed">If using local paths, upload your images to <code className="bg-accent/20 px-1 rounded">public/audio/[album-id]/</code>. Name them <code className="bg-accent/20 px-1 rounded">cover.jpg</code> (or .png).</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-bold uppercase text-xs mb-1 text-primary">3. Upload Audio</h3>
+              <p className="text-muted-foreground leading-relaxed">Upload your MP3s to the same <code className="bg-accent/20 px-1 rounded">public/audio/[album-id]/</code> folder. Ensure the filenames match the paths in your JSON.</p>
+            </div>
+            <div>
+              <h3 className="font-bold uppercase text-xs mb-1 text-primary">4. Deploy</h3>
+              <p className="text-muted-foreground leading-relaxed">Push your changes to GitHub. Vercel (or your host) will automatically rebuild and serve your new tracks from your own repository.</p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-8 pt-6 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">Powered by Talisman Repo Assets Engine</p>
+          <div className="flex gap-4">
+            <a href="https://github.com" target="_blank" className="text-xs font-bold uppercase flex items-center gap-1 hover:text-primary transition-colors">
+              GitHub Repo <ExternalLink className="size-3" />
+            </a>
+            <a href="/" className="text-xs font-bold uppercase flex items-center gap-1 hover:text-primary transition-colors">
+              Back to Site <RefreshCw className="size-3" />
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
