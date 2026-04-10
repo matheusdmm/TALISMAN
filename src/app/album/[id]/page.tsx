@@ -52,7 +52,12 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
               {album.title}
             </h1>
             <p className="text-xl text-muted-foreground mt-1">{album.artist}</p>
-            <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
+            {album.description && (
+              <p className="mt-4 text-muted-foreground leading-relaxed italic border-l-2 border-primary/20 pl-4 py-1">
+                {album.description}
+              </p>
+            )}
+            <div className="flex items-center gap-4 mt-6 text-sm text-muted-foreground">
               <span>{album.releaseYear}</span>
               <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
               <span>{album.tracks.length} Tracks</span>

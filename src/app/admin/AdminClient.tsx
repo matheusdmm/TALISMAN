@@ -191,6 +191,18 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
                     />
                   </div>
 
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                      <FileJson className="size-3" /> Description
+                    </label>
+                    <textarea
+                      className="w-full bg-accent/10 border border-border/50 rounded-lg px-3 py-2 text-xs font-medium focus:bg-accent/20 transition-colors min-h-[60px] resize-none"
+                      value={album.description || ''}
+                      onChange={(e) => updateAlbum(album.id, { description: e.target.value })}
+                      placeholder="Enter album description..."
+                    />
+                  </div>
+
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">

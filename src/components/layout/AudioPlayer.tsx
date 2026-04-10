@@ -89,6 +89,9 @@ export function AudioPlayer() {
           <div className="mb-8">
             <h2 className="text-2xl font-black tracking-tight truncate">{currentTrack.title}</h2>
             <p className="text-lg text-muted-foreground font-medium truncate">{currentAlbum?.title}</p>
+            {currentAlbum?.description && (
+              <p className="text-sm text-muted-foreground/60 mt-1 line-clamp-2 italic">{currentAlbum.description}</p>
+            )}
           </div>
 
           {/* Waveform (Full Width on Mobile) */}
@@ -173,6 +176,11 @@ export function AudioPlayer() {
             <div className="flex flex-col overflow-hidden flex-1">
               <span className="font-bold text-sm truncate">{currentTrack.title}</span>
               <span className="text-xs text-muted-foreground truncate">{currentAlbum?.title}</span>
+              {currentAlbum?.description && (
+                <span className="text-[10px] text-muted-foreground/50 truncate italic hidden md:block">
+                  {currentAlbum.description}
+                </span>
+              )}
             </div>
             {/* Mobile-only play button in minimized bar */}
             <Button 
