@@ -92,8 +92,8 @@ export function AudioPlayer() {
           </div>
 
           {/* Waveform (Full Width on Mobile) */}
-          <div className="mb-8">
-            <WaveformPlayer />
+          <div className="mb-8 md:hidden">
+            {isExpanded && <WaveformPlayer />}
           </div>
 
           {/* Controls */}
@@ -218,7 +218,9 @@ export function AudioPlayer() {
                 <SkipForward className="h-4 w-4" />
               </Button>
             </div>
-            <WaveformPlayer />
+            <div className="hidden md:block w-full">
+              {!isExpanded && <WaveformPlayer />}
+            </div>
           </div>
 
           {/* Volume Control (Desktop Only) */}
