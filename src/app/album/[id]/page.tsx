@@ -24,17 +24,17 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
       <div className="px-8 py-6">
         <Link 
           href="/" 
-          className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
         >
-          <ChevronLeft className="mr-1 h-4 w-4" />
+          <ChevronLeft className="mr-1 h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to Discography
         </Link>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-12 px-8 pb-12">
+      <div className="flex flex-col md:flex-row gap-12 px-8 pb-20">
         {/* Album Artwork */}
         <div className="w-full md:w-1/3 lg:w-1/4">
-          <div className="relative aspect-square rounded-lg overflow-hidden shadow-2xl">
+          <div className="relative aspect-square rounded-sm overflow-hidden shadow-2xl border border-border/50">
             <Image
               src={album.coverUrl}
               alt={album.title}
@@ -44,20 +44,23 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
               priority
             />
           </div>
-          <div className="mt-6">
-            <h2 className="text-3xl font-extrabold tracking-tight">{album.title}</h2>
-            <p className="text-xl text-muted-foreground">{album.artist}</p>
-            <p className="text-sm text-muted-foreground mt-2">{album.releaseYear}</p>
+          <div className="mt-8">
+            <h1 className="text-4xl font-extrabold tracking-tighter">{album.title}</h1>
+            <p className="text-xl text-muted-foreground mt-1">{album.artist}</p>
+            <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
+              <span>{album.releaseYear}</span>
+              <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+              <span>{album.tracks.length} Tracks</span>
+            </div>
           </div>
         </div>
 
         {/* Tracklist */}
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-6 pb-2 border-b border-border">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Tracks</h3>
-            <span className="text-xs text-muted-foreground">{album.tracks.length} Songs</span>
+          <div className="mb-8">
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-6">Tracklist</h2>
+            <TrackList tracks={album.tracks} />
           </div>
-          <TrackList tracks={album.tracks} />
         </div>
       </div>
     </div>

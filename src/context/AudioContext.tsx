@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
 import { Track, Album, albums } from "@/data/albums";
 
 interface AudioContextType {
@@ -20,7 +20,20 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
 export function AudioProvider({ children }: { children: ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.8);
+  const [volume, setVolumeState] = useState(0.8);
+
+  // Load initial volume from localStorage on mount
+  useEffect(() => {
+    const savedVolume = localStorage.getItem("talisman-volume");
+    if (savedVolume !== null) {
+      setVolumeState(parseFloat(savedVolume));
+    }
+  }, []);
+
+  const setVolume = useCallback((newVolume: number) => {
+    setVolumeState(newVolume);
+    localStorage.setItem("talisman-volume", newVolume.toString());
+  }, []);
 
   const currentAlbum = currentTrack 
     ? albums.find(a => a.id === currentTrack.albumId) || null 
