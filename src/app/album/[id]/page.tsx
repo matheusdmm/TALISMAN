@@ -12,6 +12,7 @@ interface AlbumPageProps {
 
 export default async function AlbumPage({ params }: AlbumPageProps) {
   const { id } = await params;
+  const [showMovingBg, setShowMovingBg] = React.useState(true);
   const album = albums.find((a) => a.id === id);
 
   if (!album) {
@@ -19,10 +20,11 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
   }
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
-      <div className="bg-depth-animate" />
+    <div className="flex flex-col min-h-screen">
+      {showMovingBg && <div className="bg-depth-animate" />}
+
       {/* Header / Back Link */}
-      <div className="px-8 py-6 flex-none">
+      <div className="px-8 py-6 flex-none flex justify-between items-center">
         <Link 
           href="/" 
           className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
@@ -30,6 +32,12 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
           <ChevronLeft className="mr-1 h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to Discography
         </Link>
+        <button 
+          onClick={() => setShowMovingBg(!showMovingBg)}
+          className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {showMovingBg ? "Plain Bg" : "Moving Bg"}
+        </button>
       </div>
 
       <div className="flex flex-col md:flex-row gap-12 px-8 pt-8 flex-1 overflow-y-auto scrollbar-hide">
