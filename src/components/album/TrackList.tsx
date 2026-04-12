@@ -12,12 +12,28 @@ interface TrackListProps {
 
 export function TrackList({ tracks }: TrackListProps) {
   const { currentTrack, isPlaying, playTrack: playTrackAction, togglePlay } = useAudio();
+  const [dynamicDurations, setDynamicDurations] = React.useState<Record<string, number>>({});
 
   const formatTime = (seconds: number) => {
+    if (!seconds || seconds === 0) return "--:--";
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
+
+  React.useEffect(() => {
+    tracks.forEach(track => {
+      if (track.duration === 0 && !dynamicDurations[track.id]) {
+        const audio = new Audio(track.audioUrl);
+        audio.onloadedmetadata = () => {
+          setDynamicDurations(prev => ({
+            ...prev,
+            [track.id]: audio.duration
+          }));
+        };
+      }
+    });
+  }, [tracks, dynamicDurations]);
 
   const playTrack = (track: Track) => {
     if (currentTrack?.id === track.id) {
@@ -31,6 +47,7 @@ export function TrackList({ tracks }: TrackListProps) {
     <div className="flex flex-col w-full">
       {tracks.map((track, index) => {
         const isActive = currentTrack?.id === track.id;
+        const displayDuration = track.duration || dynamicDurations[track.id] || 0;
         
         return (
           <div
@@ -51,7 +68,7 @@ export function TrackList({ tracks }: TrackListProps) {
             </div>
 
             <div className="text-sm text-muted-foreground font-mono">
-              {formatTime(track.duration)}
+              {formatTime(displayDuration)}
             </div>
 
             <div className="w-10 flex justify-end">

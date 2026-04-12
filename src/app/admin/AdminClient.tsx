@@ -116,6 +116,46 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
     }));
   };
 
+  const fetchTrackDuration = (albumId: string, trackId: string, audioUrl: string) => {
+    setMessage('Reading file...');
+    const audio = new Audio(audioUrl);
+    audio.onloadedmetadata = () => {
+      updateTrack(albumId, trackId, { duration: Math.floor(audio.duration) });
+      setMessage('Duration updated!');
+      setTimeout(() => setMessage(''), 2000);
+    };
+    audio.onerror = () => {
+      setMessage('Error reading file');
+      setTimeout(() => setMessage(''), 2000);
+    };
+  };
+
+  const scanAlbumDurations = async (albumId: string) => {
+    const album = albums.find(a => a.id === albumId);
+    if (!album) return;
+
+    setMessage('Scanning album...');
+    
+    for (const track of album.tracks) {
+      try {
+        const audio = new Audio(track.audioUrl);
+        await new Promise((resolve) => {
+          audio.onloadedmetadata = () => {
+            updateTrack(albumId, track.id, { duration: Math.floor(audio.duration) });
+            resolve(null);
+          };
+          audio.onerror = () => resolve(null);
+          setTimeout(() => resolve(null), 3000); // Timeout after 3s per track
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    
+    setMessage('All tracks scanned!');
+    setTimeout(() => setMessage(''), 2000);
+  };
+
   const generateLocalPath = (albumId: string, type: 'cover' | 'audio', trackTitle?: string) => {
     if (type === 'cover') {
       return `/covers/${albumId}.jpg`;
@@ -256,9 +296,14 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
               <div className="flex-1 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-black tracking-tighter uppercase italic">Tracklist</h3>
-                  <Button variant="outline" size="xs" onClick={() => addTrack(album.id)} className="font-black uppercase text-[10px] tracking-widest">
-                    <Plus className="size-3 mr-1" /> Add Track
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="xs" onClick={() => scanAlbumDurations(album.id)} className="font-black uppercase text-[10px] tracking-widest">
+                      <RefreshCw className="size-3 mr-1" /> Scan All
+                    </Button>
+                    <Button variant="outline" size="xs" onClick={() => addTrack(album.id)} className="font-black uppercase text-[10px] tracking-widest">
+                      <Plus className="size-3 mr-1" /> Add Track
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="grid gap-3">
@@ -290,7 +335,15 @@ export default function AdminClient({ initialAlbums }: { initialAlbums: Album[] 
                           />
                         </div>
                         <div className="md:col-span-2 space-y-1 text-right">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50 block">Secs</label>
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50 block">Secs</label>
+                            <button 
+                              onClick={() => fetchTrackDuration(album.id, track.id, track.audioUrl)}
+                              className="text-[10px] font-black uppercase text-primary hover:underline"
+                            >
+                              Scan
+                            </button>
+                          </div>
                           <input
                             type="number"
                             className="w-full bg-transparent border-none text-sm font-bold text-right focus:outline-none focus:ring-1 focus:ring-primary/20 rounded px-1"
