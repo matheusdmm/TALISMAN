@@ -76,4 +76,6 @@ Place your local assets in the `public` folder:
 
 ## License
 
-This project is open-source and licensed under the [MIT License](LICENSE).
+This project's source code is open-source and licensed under the [MIT License](LICENSE).
+
+All audio content, recordings, and related metadata in the `public/audio` directory are proprietary and subject to the terms of the [Proprietary Audio License](AUDIO_LICENSE.md). All rights are reserved by the author.
