@@ -159,3 +159,8 @@
   height: 100%;
   z-index: -1;
 }
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
