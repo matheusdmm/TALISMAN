@@ -10,37 +10,37 @@
       {
         "id": "ow-1",
         "albumId": "ongoing-waves",
-        "title": "aic",
+        "title": "AIC",
         "audioUrl": "/audio/ongoing-waves/aic.mp3",
-        "duration": 180
+        "duration": 134
       },
       {
         "id": "ow-2",
         "albumId": "ongoing-waves",
-        "title": "blavatsky1",
+        "title": "Blavatsky 1",
         "audioUrl": "/audio/ongoing-waves/blavatsky1.mp3",
-        "duration": 240
+        "duration": 291
       },
       {
         "id": "ow-3",
         "albumId": "ongoing-waves",
-        "title": "greg3",
+        "title": "Greg 3",
         "audioUrl": "/audio/ongoing-waves/greg3.mp3",
-        "duration": 320
+        "duration": 207
       },
       {
         "id": "ow-4",
         "albumId": "ongoing-waves",
-        "title": "hamlet",
+        "title": "Hamlet",
         "audioUrl": "/audio/ongoing-waves/hamlet (bass -0db).mp3",
-        "duration": 210
+        "duration": 217
       },
       {
         "id": "ow-5",
         "albumId": "ongoing-waves",
-        "title": "heavier than heaven",
+        "title": "Heavier Than Heaven",
         "audioUrl": "/audio/ongoing-waves/heavier than heaven.mp3",
-        "duration": 450
+        "duration": 232
       }
     ]
   }

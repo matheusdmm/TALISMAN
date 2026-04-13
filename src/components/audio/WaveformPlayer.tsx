@@ -24,7 +24,7 @@ export function WaveformPlayer() {
       barWidth: 3,
       barGap: 3,
       barRadius: 2,
-      height: 60,
+      height: 40,
       normalize: false,
       interact: true,
       dragToSeek: true,
@@ -73,7 +73,7 @@ export function WaveformPlayer() {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex items-center gap-4 relative h-16">
+      <div className="flex items-center gap-4 relative h-12">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10">
             <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -83,7 +83,7 @@ export function WaveformPlayer() {
         <span className="text-xs text-muted-foreground w-12 font-mono">
           {formatTime(currentTime)}
         </span>
-        <div ref={containerRef} className="flex-1 min-h-[60px]" />
+        <div ref={containerRef} className="flex-1 min-h-[40px]" />
         <span className="text-xs text-muted-foreground w-12 font-mono text-right">
           {formatTime(duration)}
         </span>

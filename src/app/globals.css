@@ -121,14 +121,13 @@
     @apply border-border outline-ring/50;
     -webkit-tap-highlight-color: transparent;
   }
+  html, body {
+    margin: 0;
+    padding: 0;
+    @apply font-sans scroll-smooth bg-background;
+  }
   body {
     @apply text-foreground overflow-x-hidden bg-transparent;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    min-height: 100dvh;
-  }
-  html {
-    @apply font-sans scroll-smooth bg-background;
   }
 }
 

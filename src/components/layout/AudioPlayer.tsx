@@ -147,7 +147,7 @@ export function AudioPlayer() {
       {/* Standard Bar (Minimized/Desktop) */}
       <div 
         className={cn(
-          "fixed bottom-0 left-0 right-0 h-24 bg-background/95 backdrop-blur-lg border-t border-border z-[90] transition-all duration-500 ease-in-out pb-[env(safe-area-inset-bottom)]",
+          "fixed bottom-0 left-0 right-0 h-28 bg-background/95 backdrop-blur-lg border-t border-border z-[90] transition-all duration-500 ease-in-out",
           isExpanded ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0",
           !currentTrack && "translate-y-full opacity-0"
         )}
@@ -194,9 +194,12 @@ export function AudioPlayer() {
             </Button>
           </div>
 
+          {/* Vertical Separator 1 */}
+          <div className="hidden md:block h-12 w-px bg-border/50 shrink-0" />
+
           {/* Waveform & Playback Controls (Hidden/Visible on Desktop) */}
-          <div className="hidden md:flex flex-col flex-1 max-w-2xl items-center gap-1">
-            <div className="flex items-center gap-4">
+          <div className="hidden md:flex flex-col flex-1 max-w-2xl items-center gap-2 px-2">
+            <div className="flex items-center gap-2">
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -210,7 +213,7 @@ export function AudioPlayer() {
                 onClick={togglePlay} 
                 variant="outline" 
                 size="icon" 
-                className="h-10 w-10 rounded-full bg-foreground text-background hover:scale-105 transition-transform active:scale-95"
+                className="h-10 w-10 rounded-full bg-foreground text-background hover:scale-105 transition-transform active:scale-95 mx-2"
               >
                 {isPlaying ? <Pause className="h-5 w-5 fill-current" /> : <Play className="h-5 w-5 fill-current ml-0.5" />}
               </Button>
@@ -224,10 +227,13 @@ export function AudioPlayer() {
                 <SkipForward className="h-4 w-4" />
               </Button>
             </div>
-            <div className="hidden md:block w-full">
+            <div className="hidden md:block w-full px-4">
               <DynamicWaveformPlayer />
             </div>
           </div>
+
+          {/* Vertical Separator 2 */}
+          <div className="hidden md:block h-12 w-px bg-border/50 shrink-0" />
 
           {/* Volume Control (Desktop Only) */}
           <div className="hidden md:flex items-center gap-3 w-1/4 justify-end">
