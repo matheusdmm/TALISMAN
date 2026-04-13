@@ -13,7 +13,12 @@ export function WaveformPlayer() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current || !audioRef.current || wavesurferRef.current) return;
+    if (!containerRef.current || !audioRef.current) return;
+
+    // Destroy existing instance before creating a new one for the new track
+    if (wavesurferRef.current) {
+      wavesurferRef.current.destroy();
+    }
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
@@ -51,7 +56,7 @@ export function WaveformPlayer() {
       ws.destroy();
       wavesurferRef.current = null;
     };
-  }, [audioRef]);
+  }, [audioRef, currentTrack]); // Added currentTrack as a dependency
 
   // Update duration when track changes
   useEffect(() => {
