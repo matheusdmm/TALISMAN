@@ -1,0 +1,29 @@
+[
+  {
+    "id": "event-1",
+    "date": "2026-04-24T20:00:00Z",
+    "title": "RAW STUDIO SESSION",
+    "venue": "VOID UNDERGROUND",
+    "city": "SÃO PAULO",
+    "link": "https://talisman.com",
+    "status": "UPCOMING"
+  },
+  {
+    "id": "event-2",
+    "date": "2026-05-12T22:00:00Z",
+    "title": "ECHOES FROM THE VOID",
+    "venue": "THE MONUMENT",
+    "city": "BERLIN",
+    "link": "https://talisman.com",
+    "status": "UPCOMING"
+  },
+  {
+    "id": "event-3",
+    "date": "2026-06-05T19:30:00Z",
+    "title": "ANALOG RESIDENCY",
+    "venue": "CONCRETE GARDEN",
+    "city": "LONDON",
+    "link": "https://talisman.com",
+    "status": "SOLD OUT"
+  }
+]

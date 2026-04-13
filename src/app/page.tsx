@@ -1,4 +1,5 @@
 import { AlbumGrid } from '@/components/album/AlbumGrid';
+import { EventList } from '@/components/home/EventList';
 import { Footer } from '@/components/layout/Footer';
 
 export default function Home() {
@@ -21,6 +22,13 @@ export default function Home() {
           </h2>
         </div>
         <AlbumGrid />
+
+        <div className="px-6 md:px-12 py-8 border-b border-border flex justify-between items-center bg-accent/5">
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+            Upcoming Events
+          </h2>
+        </div>
+        <EventList />
       </section>
       <Footer />
     </div>
