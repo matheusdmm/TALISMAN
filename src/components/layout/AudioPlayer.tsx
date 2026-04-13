@@ -5,7 +5,7 @@ import { useAudio } from "@/context/AudioContext";
 import { Play, Pause, Volume2, SkipBack, SkipForward, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { WaveformPlayer } from "@/components/audio/WaveformPlayer";
+import DynamicWaveformPlayer from "@/components/audio/DynamicWaveformPlayer";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -107,7 +107,7 @@ export function AudioPlayer() {
 
           {/* Waveform (Full Width on Mobile) */}
           <div className="w-full px-4 mb-8">
-            <WaveformPlayer />
+            <DynamicWaveformPlayer />
           </div>
 
           {/* Controls */}
@@ -225,7 +225,7 @@ export function AudioPlayer() {
               </Button>
             </div>
             <div className="hidden md:block w-full">
-              <WaveformPlayer />
+              <DynamicWaveformPlayer />
             </div>
           </div>
 
