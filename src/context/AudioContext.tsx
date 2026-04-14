@@ -32,6 +32,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       setVolumeState(vol);
       if (audioRef.current) audioRef.current.volume = vol;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setVolume = useCallback((newVolume: number) => {
