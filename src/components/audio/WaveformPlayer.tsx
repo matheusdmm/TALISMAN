@@ -60,10 +60,11 @@ export function WaveformPlayer() {
 
   // Update duration when track changes
   useEffect(() => {
-    if (audioRef.current) {
-      const updateDuration = () => setDuration(audioRef.current?.duration || 0);
-      audioRef.current.addEventListener('loadedmetadata', updateDuration);
-      return () => audioRef.current?.removeEventListener('loadedmetadata', updateDuration);
+    const audio = audioRef.current;
+    if (audio) {
+      const updateDuration = () => setDuration(audio.duration || 0);
+      audio.addEventListener('loadedmetadata', updateDuration);
+      return () => audio.removeEventListener('loadedmetadata', updateDuration);
     }
   }, [currentTrack, audioRef]);
 
